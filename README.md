@@ -4,6 +4,7 @@ por: Claudiany Martins (claudiany.martins@ufrpe.br)
 
 
 ##  VinBigData Chest X-ray Abnormalities Detection 
+Duc Nguyen, DungNB, Ha Q. Nguyen, Julia Elliott, NguyenThanhNhan, and Phil Culliton. VinBigData Chest X-ray Abnormalities Detection. https://kaggle.com/competitions/vinbigdata-chest-xray-abnormalities-detection, 2020. Kaggle.
 
 ### Dataset information
 
