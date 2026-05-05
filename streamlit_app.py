@@ -5,14 +5,15 @@ st.set_page_config(page_title="Análise de dados - PISI3", layout="wide")
 st.title("Dashboard - Analise Exploratória de Dados (AED) com dataset tabular")
 st.markdown("---")
 
-tab_config_dados, tab_eda,  = st.tabs([
-    "Configurações de Dados",
+tab_carregar_dados, tab_analise,  = st.tabs([
+    "Carregamento dos Dados",
     "Análise Exploratória de Dados"
 ])
 
-with tab_config_dados:
-    st.header("Configurações de Dados")
+with tab_carregar_dados:
     st.subheader("Carregar csv do Kaggle")
+    st.write("Verificar tipos de dados, valores nulos e estatísticas descritivas básicas")
+    
             
-with tab_eda:
-    st.header("Análise Exploratória de Dados (EDA)- dataset.")
+with tab_analise:
+    st.subheader("Análise Exploratória de Dados (EDA)- dataset.")
