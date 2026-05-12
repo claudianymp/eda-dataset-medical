@@ -2,3 +2,6 @@ streamlit
 pandas
 pydicom
 kaggle
+torch
+matplotlib
+scikit-learn
