@@ -85,9 +85,8 @@ def plot_comparative_boxplot(df, column):
 
 def plot_correlation_heatmap(df):
     fig, ax = plt.subplots(figsize=(18, 8))
-    cols = ['perimeter_mean', 'concave_points_mean', 'area_se', 'radius_worst', 
-            'texture_worst', 'perimeter_worst', 'area_worst', 'concavity_worst', 
-            'concave_points_worst', 'mitosis_rate', 'diagnosis']
+    cols = ['radius_mean','area_mean','radius_worst','area_worst','perimeter_mean','fractal_dimension_se',
+            'texture_mean','symmetry_mean','compactness_worst','concavity_worst','diagnosis']
     
     if df is not None:
         corr = df[cols].corr()

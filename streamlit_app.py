@@ -45,7 +45,7 @@ with tab_ranking_PCA:
         st.dataframe(ranking_pca)
         
 with tab_analysis:
-    st.subheader("Análise Exploratória de Dados (EDA)- dataset.")
+    st.subheader("Análise Exploratória de Dados (EDA).")
     
     if(st.session_state.df_test is not None):
         df = st.session_state.df_test
@@ -55,7 +55,7 @@ with tab_analysis:
             
         with st.expander("Análise de Separação: Atributo Mais Influente"):
             st.subheader("Análise: Raio do Tumor")
-            st.pyplot(plot_separation_density(df, 'radius_worst'))
+            st.pyplot(plot_separation_density(df, 'radius_mean'))
             
         with st.expander("Análise de Separação: Tamanho e Extremidades"):
             st.write("Comparando as características de 'Pior Caso' que mais distinguem os tumores.")
@@ -67,9 +67,9 @@ with tab_analysis:
                 st.pyplot(fig_area)
                 
             with col2:
-                st.subheader("Análise: Perímetro (Pior Caso)")
-                fig_perimeter = plot_comparative_boxplot(st.session_state.df, 'perimeter_worst')
-                st.pyplot(fig_perimeter)
+                st.subheader("Análise: Raio (Pior Caso)")
+                fig_comparative = plot_comparative_boxplot(st.session_state.df, 'radius_worst')
+                st.pyplot(fig_comparative)
                 
         with st.expander("Mapa de Calor: Redundâncias e Relações"):
             st.write("Análise de como as variáveis se relacionam entre si e com o diagnóstico final.")
