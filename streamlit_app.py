@@ -4,7 +4,7 @@ import streamlit as st
 import pandas as pd
 from src.feature_information import get_pca_loadings
 from src.load_dataset import load_csv_to_dataframe, load_info_dataset, load_statistics_summary, clean_prepare_data
-from src.visualization import plot_diagnosis_distribution, plot_correlation_heatmap, plot_separation_density, plot_comparative_boxplot, plot_tsne
+from src.visualization import plot_diagnosis_distribution, plot_correlation_heatmap, plot_separation_density, plot_comparative_boxplot, plot_tsne, plot_PC1_influency
 from src.model import CancerMLP
 
     
@@ -40,9 +40,14 @@ with tab_loading_data:
         load_statistics_summary(st.session_state.df)
 
 with tab_ranking_PCA:
+    st.subheader("Quais variáveis tem maior influência no diagnóstico?")
     with st.expander("Ranking de Importância dos Componentes (PCA Loadings)"):
         ranking_pca = get_pca_loadings(st.session_state.df)
         st.dataframe(ranking_pca)
+    
+    with st.expander("Gráfico da Carga dos Componentes Principais"):
+        fig = plot_PC1_influency(ranking_pca)
+        st.plotly_chart(fig)
         
 with tab_analysis:
     st.subheader("Análise Exploratória de Dados (EDA).")
@@ -51,11 +56,24 @@ with tab_analysis:
         df = st.session_state.df_test
         
         with st.expander("Distribuição da Variável Alvo: Diagnóstico"):
+            st.subheader("Como está o balancemanto do dataset para a classe Diagnóstico?")
             st.pyplot(plot_diagnosis_distribution(df))
             
-        with st.expander("Análise de Separação: Atributo Mais Influente"):
-            st.subheader("Análise: Raio do Tumor")
-            st.pyplot(plot_separation_density(df, 'radius_mean'))
+            counts = df['diagnosis'].value_counts(normalize=True) * 100
+            st.write(f"**Análise:** O dataset possui {counts.get(0, 0):.1f}% de casos Benignos e {counts.get(1, 0):.1f}% de casos Malignos.")
+            if abs(counts.get(0, 0) - counts.get(1, 0)) < 15:
+                st.success("Os dados estão bem balanceados, favoreceendo o treinamento da Rede Neural.")
+            else:
+                st.warning("O dataset está desbalanceado, vai ser necessário usar alguma técnica de pesos nas classes durante o treino.")
+            
+        with st.expander("Análise de Separação: Atributos mais influentes"):
+            col1, col2 = st.columns(2)
+            with col1:
+                st.subheader("Densidade do Raio do Tumor para o diagnóstico de tumores")
+                st.pyplot(plot_separation_density(df, 'radius_mean'))
+            with col1:
+                st.subheader("Densidade da Área do Tumor para o diagnóstico de tumores")
+                st.pyplot(plot_separation_density(df, 'area_mean'))
             
         with st.expander("Análise de Separação: Tamanho e Extremidades"):
             st.write("Comparando as características de 'Pior Caso' que mais distinguem os tumores.")
@@ -72,7 +90,7 @@ with tab_analysis:
                 st.pyplot(fig_comparative)
                 
         with st.expander("Mapa de Calor: Redundâncias e Relações"):
-            st.write("Análise de como as variáveis se relacionam entre si e com o diagnóstico final.")
+            st.write("Como as variáveis se relacionam entre si e com o diagnóstico final?")
             st.pyplot(plot_correlation_heatmap(df))        
 
 with tab_train_model:
@@ -83,14 +101,14 @@ with tab_train_model:
                 st.session_state.cancer_model = CancerMLP(input_size)
 
             if st.button("Iniciar Treinamento"):
-                with st.spinner("Realizando treinamento... Isso pode levar alguns segundos."):
+                with st.spinner("Treinamento em execução"):
                     st.session_state.cancer_model.get_model_trainning(st.session_state.df_train)
                     st.session_state.cancer_model.evaluate_model(st.session_state.df_train) 
             
             
         with st.expander("Redução de Dimensionalidade: t-SNE"):
             if st.button("Gerar Gráfico t-SNE"):
-                with st.spinner("Calculando projeções espaciais... Isso pode levar alguns segundos."):
+                with st.spinner("Projeções espaciais"):
                     df_train = clean_prepare_data(st.session_state.df_train)
                     fig_tsne = plot_tsne(df_train)
                     st.pyplot(fig_tsne)       

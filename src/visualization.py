@@ -2,6 +2,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler
+import plotly.express as px
 
 def plot_diagnosis_distribution(df):
     fig, ax = plt.subplots(figsize=(18, 8))
@@ -108,8 +109,6 @@ def plot_tsne(df):
     y = df['diagnosis']
 
     X_scaled = StandardScaler().fit_transform(X)
-
-    # perplexity: número de vizinhos (geralmente entre 5 e 50)
     tsne = TSNE(n_components=2, perplexity=30, random_state=42)
     X_embedded = tsne.fit_transform(X_scaled)
 
@@ -130,3 +129,12 @@ def plot_tsne(df):
     
     return fig
 
+def plot_PC1_influency(loadings):
+    fig = px.bar(loadings, 
+                x=loadings.index, 
+                y='PC1', 
+                title='Influência das Variáveis no PC1',
+                labels={'index': 'Variável', 'PC1': 'Carga (Loading)'},
+                color='PC1',
+                color_continuous_scale='RdBu_r')
+    return fig
